@@ -56,11 +56,11 @@ new_todo() {
 - [ ] 455250 482004 491968 mibry
 - [ ] https://github.com/caronc/apprise?ref=selfh.st -> notification
 - [ ] https://github.com/prometheus/blackbox_exporter -> probe/ping external services/endpoints (ex. alerts when token expired on some REST API)
-- [x] make a script to check if system got updated correctly: $(uname -r) then $(ls /usr/lib/modules)
+- [x] make a script to check if system got updated correctly: \$(uname -r) then \$(ls /usr/lib/modules)
 
 ## Go
 
-- [ ] see `swag-go\ or `oapi-codegen` OpenAPI spec Code Generator for Go
+- [ ] see swag-go or oapi-codegen OpenAPI spec Code Generator for Go
 
 ## Kubernetes
 
