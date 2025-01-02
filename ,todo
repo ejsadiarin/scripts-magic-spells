@@ -26,15 +26,12 @@ new_todo() {
     cat >"$todo_file" <<EOF
 # DAILY QUEST for $date_today:
 
-- [ ] 100 Pushups
-- [ ] 100 Sit-ups
-- [ ] 100 Squats
-- [ ] Workout/Rest Day
+- [ ] Workout [if none, do trifecta (100 pushup, 100 situps, 100 squats)]
 
-- [ ] r/linuxupskillchallenge daily
+- [ ] refresh fundamentals (e.g. any programming session, anki flashcards, etc.)
 - [ ] leetcode
 - [ ] CCNA grind
-- [ ] refresh fundamentals (anki flashcards)
+- [ ] r/linuxupskillchallenge daily
 
 
 # Side Quests:
