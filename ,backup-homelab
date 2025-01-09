@@ -29,6 +29,8 @@ ntfy="$HOME/services/ntfy"
 uptime_kuma="$HOME/services/uptime_kuma"
 # glance
 glance="$HOME/services/glance"
+# beszel
+beszel="$HOME/services/beszel"
 
 # essentials
 restic="$HOME/services/restic"
@@ -42,6 +44,7 @@ dirs=(
     "$gitea"
     "$ntfy"
     "$glance"
+    "$beszel"
     "$uptime_kuma"
     "$immich"
     "$restic"
@@ -71,7 +74,7 @@ dry_run() {
         echo "Creating if not exists: $bk_dir"
 
         case "$dir" in
-        "$traefik" | "$uptime_kuma" | "$glance")
+        "$traefik" | "$uptime_kuma" | "$glance" | "$beszel")
             echo "current dir: $dir/ with bk_dir: $bk_dir/"
             sudo rsync -azvh --delete --progress --dry-run "$dir"/ "$bk_dir"/
             ;;
