@@ -26,17 +26,31 @@ new_todo() {
     cat >"$todo_file" <<EOF
 # DAILY QUEST for $date_today:
 
+    **REMEMBER, in order to be great, you MUST practice like a "great"**
+
+    **make use of the best resources available**
+
 - [ ] Workout [if none, do trifecta (100 pushup, 100 situps, 100 squats)]
 
 - [ ] refresh fundamentals (e.g. any programming session, anki flashcards, etc.)
 - [ ] leetcode
 - [ ] CCNA grind
 - [ ] work on spellbook
+- [ ] [protohackers](https://protohackers.com/)
+- [ ] MIT work - (don't let yourself get behind)
+    (focuses on systems programming, OS, network programming, distributed systems, etc.):
+    - [6.033 - OS1: os, networking, distrib. systems](http://web.mit.edu/6.033/www/) 
+    - [6.097 - operating systems engineering](https://pdos.csail.mit.edu/archive/6.097/)
+    - [6.1810 - OS2: operating systems engineering](https://pdos.csail.mit.edu/6.1810/2024/schedule.html) 
+    - [6.5840 - distributed systems with go](https://pdos.csail.mit.edu/6.824/schedule.html) 
+        - golabs sources: https://github.com/fackee/MIT-6.5840-golabs-2023
+    - [6.824 - distributed computer systems engineering (grad)](https://ocw.mit.edu/courses/6-824-distributed-computer-systems-engineering-spring-2006/pages/lecture-notes/)
+        - hands on OS and systems programming
+    - [6.829 - computer networks (grad)](https://ocw.mit.edu/courses/6-829-computer-networks-fall-2002/pages/syllabus/)
 
+# Side Quests
 
-# Side Quests:
-
-- [ ] real-time software programs/applications
+- [ ] own protocol from scratch [not own implementation of certain protocols (already done with HTTP/1.1)]
 - [ ] [watch API performance design BEST PRACTICES](https://youtu.be/CI0ZxSQ8sWQ?si=ZCrenujPxmeuZ5LX)
 - [ ] VLANS: https://www.youtube.com/watch?v=JszGeQPTo4w&ab_channel=CrosstalkSolutions
 - [x] offsite and onsite Git server
