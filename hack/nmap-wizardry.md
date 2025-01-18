@@ -52,7 +52,17 @@ title: nmap Wizardry
   ```bash
   nmap -A <target-ip-or-hostname>
   ```
-- 
+- meta 
+```bash
+nmap -sS -sV -O -PN -p- <target-ip-or-hostname>
+```
+    - `-sS` - TCP SYN stealth scan, sends TCP SYN packet to a port (receives SYN-ACK if open, RST if closed)
+        - less likely to be logged
+    - `-sV` - service version detection, probe open ports and determine service (and its version) running behind it 
+    - `-O` - OS detection, by analyzing responses from various TCP/IP probes
+    - `-PN` - no ping, assume target host is up and skip step of checking if target is reachable
+        - useful for targets that block ICMP packets (ping)
+    - `-p-` - all ports, scans all 65,535 ports instead of the 1000 commonly used ports 
 
 # Resources
 [see nmap cheat sheet](nmap-cheat-sheet-output.txt)
