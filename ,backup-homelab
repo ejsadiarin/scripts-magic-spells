@@ -202,7 +202,7 @@ local_backup() {
                 docker exec -u git -it -w /tmp "$(docker ps -qf 'name=^gitea-server$')" bash -c '/usr/local/bin/gitea dump -c /data/gitea/conf/app.ini'
                 latest_zip=$(docker exec -u git "$(docker ps -qf 'name=^gitea-server$')" ls /tmp -Art | tail -n 1 | tr -d '\r')
                 echo "Latest dump file: $latest_zip"
-                docker cp "$(docker ps -qf 'name=^gitea$')":/tmp/"$latest_zip" "$bk_dir/dumps/" || {
+                docker cp "$(docker ps -qf 'name=^gitea-server$')":/tmp/"$latest_zip" "$bk_dir/dumps/" || {
                     echo "Error: Failed to copy $latest_zip from container."
                     return 1
                 }
