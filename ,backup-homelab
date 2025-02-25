@@ -36,6 +36,7 @@ beszel="$HOME/services/beszel"
 restic="$HOME/services/restic"
 vault="$HOME/vault"
 
+#  TODO: make one for vaultwarden
 dirs=(
     "$traefik"
     "$authentik"
