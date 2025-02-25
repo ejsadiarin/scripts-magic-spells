@@ -34,7 +34,6 @@ beszel="$HOME/services/beszel"
 
 # essentials
 restic="$HOME/services/restic"
-scripts="$HOME/services/scripts"
 vault="$HOME/vault"
 
 dirs=(
@@ -48,7 +47,6 @@ dirs=(
     "$uptime_kuma"
     "$immich"
     "$restic"
-    "$scripts"
     "$vault"
 )
 
@@ -150,7 +148,7 @@ local_backup() {
             # dest: ~/backups/traefik/
             sudo rsync -azvh --delete --progress "$dir"/ "$bk_dir"/ || {
                 echo "[x] Error on rsync [$dir]"
-                return 1
+                continue
             }
             ;;
         "$portainer")
@@ -161,21 +159,21 @@ local_backup() {
                 sudo chown -R "$(whoami)":"$(whoami)" "$bk_dir"/data
             } || {
                 echo "Error on rsync [$dir]"
-                return 1
+                continue
             }
             ;;
         "$authentik")
             # dest: ~/backups/authentik/postgres-backup.sql
             sudo rsync -azvh --delete --progress "$dir"/ "$bk_dir"/ || {
                 echo "[x] Error on rsync [$dir]"
-                return 1
+                continue
             }
             {
                 timestamp=$(date +%s%3N)
                 docker exec -i authentik-postgres /usr/local/bin/pg_dump --username authentik-pg-admin authentik-pg-db >"$bk_dir"/postgres-backup-"$timestamp".sql
             } || {
                 echo "Error on docker pg_dump [$dir]: $err"
-                return 1
+                continue
             }
             ;;
         "$ntfy")
@@ -189,7 +187,7 @@ local_backup() {
                 sudo rsync -azvh --delete --progress "$dir"/cache "$bk_dir"
             } || {
                 echo "Error on rsync [$dir]"
-                return 1
+                continue
             }
             ;;
         "$gitea")
@@ -204,7 +202,7 @@ local_backup() {
                 echo "Latest dump file: $latest_zip"
                 docker cp "$(docker ps -qf 'name=^gitea-server$')":/tmp/"$latest_zip" "$bk_dir/dumps/" || {
                     echo "Error: Failed to copy $latest_zip from container."
-                    return 1
+                    continue
                 }
                 # after copy, delete the oldest one (retains 3 latest copies)
                 num_dumps=$(ls "$bk_dir"/dumps/ -A | wc -l)
@@ -213,13 +211,13 @@ local_backup() {
                     echo "Removing oldest dump file: $oldest_zip"
                     sudo rm -f "$oldest_zip" || {
                         echo "Error: Failed to remove $oldest_zip."
-                        return 1
+                        continue
                     }
                 fi
                 echo "Gitea dump completed."
             } || {
                 echo "Error on backing up via gitea dump [$dir]"
-                return 1
+                continue
             }
             ;;
         "$immich")
@@ -241,14 +239,14 @@ local_backup() {
                 echo "Successfully backed up immich"
             } || {
                 echo "Error on rsync [$dir]"
-                return 1
+                continue
             }
             ;;
         *)
             echo "Backing up $dir..."
             sudo rsync -azvh --delete --progress "$dir"/ "$bk_dir"/ || {
                 echo "Error on rsync [$dir]"
-                return 1
+                continue
             }
             ;;
         esac
