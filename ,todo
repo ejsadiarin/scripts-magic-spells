@@ -35,7 +35,15 @@ new_todo() {
 - [ ] refresh fundamentals (e.g. any programming session, anki flashcards, etc.)
 - [ ] leetcode
 - [ ] CCNA grind
-- [ ] work on spellbook
+- [ ] work on spellbook - life management system
+    - agents - gops
+    - lever todos - based on resume (reverse engineer resume)
+        - markdown files
+    - notifications  - event-driven life
+        - reminders (acads, daily things, etc.) - connect the lever todos to this
+        - connect to calendar webdav (scheduling)
+        - anime/manga updates
+        - events like bdays, concerts (try to webscape, etc.)
 
 # Side Quests
 
