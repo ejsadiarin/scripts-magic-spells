@@ -36,6 +36,11 @@ new_todo() {
 - [ ] leetcode
 - [ ] CCNA grind
 - [ ] work on spellbook
+
+# Side Quests
+
+- [ ] [kubebyexample](https://kubebyexample.com/)
+- [ ] own protocol from scratch [not own implementation of certain protocols (already done with HTTP/1.1)]
 - [ ] [protohackers](https://protohackers.com/)
 - [ ] MIT work - (don't let yourself get behind)
     (focuses on systems programming, OS, network programming, distributed systems, etc.):
@@ -47,12 +52,6 @@ new_todo() {
     - [6.824 - distributed computer systems engineering (grad)](https://ocw.mit.edu/courses/6-824-distributed-computer-systems-engineering-spring-2006/pages/lecture-notes/)
         - hands on OS and systems programming
     - [6.829 - computer networks (grad)](https://ocw.mit.edu/courses/6-829-computer-networks-fall-2002/pages/syllabus/)
-
-# Side Quests
-
-- [ ] own protocol from scratch [not own implementation of certain protocols (already done with HTTP/1.1)]
-- [ ] [watch API performance design BEST PRACTICES](https://youtu.be/CI0ZxSQ8sWQ?si=ZCrenujPxmeuZ5LX)
-- [ ] VLANS: <https://www.youtube.com/watch?v=JszGeQPTo4w&ab_channel=CrosstalkSolutions>
 - [x] offsite and onsite Git server
   - [x] offsite: cloud server, codeberg
   - [x] onsite: self-hosted gitlab or gitea
@@ -64,29 +63,35 @@ new_todo() {
 - [ ] git intricasies <https://www.reddit.com/r/linux/s/NSmM0zzAxu>
 - [x] setup cron jobs automation
 - [x] look into webhooks
+- [ ] [watch API performance design BEST PRACTICES](https://youtu.be/CI0ZxSQ8sWQ?si=ZCrenujPxmeuZ5LX)
+- [ ] VLANS: <https://www.youtube.com/watch?v=JszGeQPTo4w&ab_channel=CrosstalkSolutions>
 
 - [ ] 455250 482004 491968 mibry
-- [ ] <https://github.com/caronc/apprise?ref=selfh.st> -> notification
+- [x] <https://github.com/caronc/apprise?ref=selfh.st> -> notification
 - [ ] <https://github.com/prometheus/blackbox_exporter> -> probe/ping external services/endpoints (ex. alerts when token expired on some REST API)
-- [x] make a script to check if system got updated correctly: $(uname -r) then $(ls /usr/lib/modules)
+- [x] make a script to check if system got updated correctly: 6.13.8-200.fc41.x86_64 then 6.13.5-200.fc41.x86_64
+6.13.6-200.fc41.x86_64
+6.13.8-200.fc41.x86_64
 
 ## Go
 
 - [ ] see swag-go or oapi-codegen OpenAPI spec Code Generator for Go
+- [ ] huma or yokai
 
 ## Kubernetes
 
+- [ ] setup k3s or k3d
+- [ ] [kubebyexample](https://kubebyexample.com/)
 - [ ] [go n kubernetes things practical](https://youtube.com/@dhij)
 - [ ] add networking k8s: <https://www.reddit.com/r/kubernetes/s/TOZlIZ3Ggg> and [THIS](https://www.reddit.com/r/kubernetes/comments/1cj88by/the_torture_starts_here/)
 - [ ] practice k8s (killercoda, play-labs-with-k8s, kodekloud)
-  - [ ] setup kind or k3s or minikube for practice
 - [ ] [Kubernetes Networking Series](https://youtube.com/playlist?list=PLSAko72nKb8QWsfPpBlsw-kOdMBD7sra-&si=IVWpBw9YBy7UYUc_)
 
 ## DevOps things
 
+- [ ] [k3s homelab](http//github.com/loganmarchione/k8s_homelab)
 - [x] [compose files scripts volumes structure](https://www.reddit.com/r/selfhosted/s/wENppd13RC)
 - [x] [cron jobs](https://youtu.be/sKH5cpCrpes?si=w-8BuZa6MkV5Y2cj)
-- [ ] [k3s homelab](http//github.com/loganmarchione/k8s_homelab)
 - [x] [ansible role to update all with reboot](http//www.reddit.com/r/selfhosted/s/cy940X7SL2)
 - [ ] Scripts to automate things wrt
   - APIs
@@ -105,7 +110,7 @@ new_todo() {
 # KNOW HOW TO
 
 - [x] basic understanding of the filesystem, what goes where, and how to move around in it.
-- [ ] basic networking setup and troubleshooting.
+- [x] basic networking setup and troubleshooting.
 - [x] basic administrative tasks like installing/uninstalling stuff, installing updates, reading and setting file permissions, etc.
 - [x] ssh basics (key generation and placement, connection, etc)
 
@@ -113,9 +118,9 @@ new_todo() {
 
 - [x] knowing how to join a Linux machine to a domain and managing ssh/sudo access to it using domain credentials instead of keys (familiarity with sshd is helpful here).
 - [x] familiarity with ansible and satellite server.
-- [ ] knowing how to mount basic data disks and network shares.
+- [x] knowing how to mount basic data disks and network shares.
 - [x] how to grow root and swap partitions without downtime (I guess also worth saying familiarity with LVM for this one).
-- [ ] familiarity with Podman.
+- [x] familiarity with Podman.
 
 
 EOF
