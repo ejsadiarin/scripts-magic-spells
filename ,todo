@@ -36,8 +36,9 @@ new_todo() {
 - [ ] leetcode
 - [ ] CCNA grind
 - [ ] work on spellbook - life management system
+    - system status window (maybe integrate with AI to generate daily todos based on *levers*)
     - agents - gops
-    - lever todos - based on resume (reverse engineer resume)
+    - lever todos (*levers*) - based on resume (reverse engineer resume)
         - markdown files
     - notifications  - event-driven life
         - reminders (acads, daily things, etc.) - connect the lever todos to this
