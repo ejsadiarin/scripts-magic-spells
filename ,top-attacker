@@ -5,8 +5,15 @@
 set -e
 
 if [ -z "$1" ]; then
-	echo -e "\nUsage: $(basename "$0") <num> - Lists the top <num> attackers by IP"
-	exit 0
+    echo -e "\nUsage: $(basename "$0") <num> - Lists the top <num> attackers by IP"
+    exit 0
+fi
+
+# check if debian-based or redhat-based for auth file
+os=$(cat /etc/os-release | grep "^ID" | cut -d "=" -f2)
+auth_file="/var/log/auth.log"
+if [ "$os" == "fedora" ]; then
+    auth_file="/var/log/secure"
 fi
 
 echo " "
@@ -14,4 +21,4 @@ echo "Persistent recent attackers"
 echo " "
 echo "Attempts       IP"
 echo "-----------------------"
-grep "Disconnected from authenticating user root" /var/log/auth.log | cut -d: -f 4 | cut -d " " | sort | uniq -c | sort -nr | head -"$1"
+grep "Disconnected from authenticating user root" $auth_file | cut -d: -f 4 | cut -d " " | sort | uniq -c | sort -nr | head -"$1" # TODO: fix this cut
