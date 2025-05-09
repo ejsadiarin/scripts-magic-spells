@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Usage: ./add_gitmodules.sh [parent_directory]
+
+# Use provided directory or current directory
+parent_dir="${1:-$(pwd)}"
+cd "$parent_dir" || exit 1
+echo "Scanning for Git repositories in: $parent_dir"
+
+# Check if a directory is a git repository
+is_git_repo() {
+    if [ -d "$1/.git" ]; then
+        # git repo with remote url
+        return 0
+    elif [ -f "$1/.git" ]; then
+        # handle submodule case where .git is a file
+        return 0
+    else
+        return 1 # False, not a git repo
+    fi
+}
+
+# Check if a path is already a submodule
+is_already_submodule() {
+    local path="$1"
+    if [ -f ".gitmodules" ]; then
+        grep -q "path = $path" ".gitmodules"
+        return $?
+    fi
+    return 1 # Not a submodule if .gitmodules doesn't exist
+}
+
+# Initialize result file
+temp_file=$(mktemp)
+
+# Find all directories that contain .git
+find "$parent_dir" -type d -not -path "*/\.*" | while read -r dir; do
+    if is_git_repo "$dir" && [ "$dir" != "$parent_dir" ]; then
+        # Get relative path
+        rel_path="${dir#$parent_dir/}"
+        echo "Found Git repository: $rel_path"
+
+        # Get remote URL of the repository
+        remote_url=$(cd "$dir" && git config --get remote.origin.url)
+        if [ -n "$remote_url" ]; then
+            echo "  $rel_path -> $remote_url" >>"$temp_file"
+        else
+            echo "  Warning: No remote URL found for $rel_path"
+        fi
+    fi
+done
+
+# Add found repositories as submodules
+if [ -s "$temp_file" ]; then
+    echo "Adding repositories as submodules:"
+    while IFS= read -r line; do
+        rel_path=$(echo "$line" | awk '{print $1}')
+        remote_url=$(echo "$line" | awk '{print $3}')
+
+        # Check if already a submodule
+        if is_already_submodule "$rel_path"; then
+            echo "Skipping $rel_path - already a submodule"
+        else
+            # Add as submodule
+            git submodule add "$remote_url" "$rel_path"
+            echo "Added $rel_path as a new submodule"
+        fi
+    done <"$temp_file"
+
+    echo "Submodule operations completed successfully."
+else
+    echo "No Git repositories found to add as submodules."
+fi
+
+# Clean up
+rm "$temp_file"
