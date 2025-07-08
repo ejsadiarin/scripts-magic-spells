@@ -30,15 +30,20 @@ new_todo() {
 - [ ] system design and/or leetcode grind
 - [ ] data-engineering (datacamp, zoomcamp, side projects)
     - zoomcamp
+    - data-engineering-handbook
     - datacamp
     - leap bigquery
+    - stdbadv
+
+- [ ] **ITDBADM** proposal (DL: july 10)
+- [ ] **ITNET01** case study (DL: july 14)
+
+- [ ] spellbook-todos mini project
+- [ ] learn dbt
 
 ## ACADS to complete this ILW
 
 - [ ] PCK assessment for SAS2000 - dl on july 26
-- [ ] URGENT! ITNET01 netacad checkpoint exams (1245pm - 4pm)
-    - only open tomorrow july 3, 2025 12:45pm - 4pm
-- [ ] ITNET01 review module 9 ARP and answer PT labs
 EOF
 }
 
