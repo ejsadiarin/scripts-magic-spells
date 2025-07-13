@@ -26,6 +26,8 @@ new_todo() {
     cat >"$todo_file" <<EOF
 # DAILY QUEST for $date_today:
 
+## static
+
 - [ ] Workout [if none, do trifecta (100 pushup, 100 situps, 100 squats)]
 - [ ] system design and/or leetcode grind
 - [ ] data-engineering (datacamp, zoomcamp, side projects)
@@ -35,15 +37,20 @@ new_todo() {
     - leap bigquery
     - stdbadv
 
-- [ ] **ITDBADM** proposal (DL: july 10)
-- [ ] **ITNET01** case study (DL: july 14)
+## dynamic
+
+- [ ] **ITNET01** case study (DL: july 14) #urgent
+- [ ] **ITISDEV** app - need updates #urgent
+- [ ] **ITDBADM** python API - MP 1 (DL: july 25)
+- [ ] **SEC-ADM** MP2 (DL: august 1)
 
 - [ ] spellbook-todos mini project
-- [ ] learn dbt
+- [ ] learn dbt-core, airflow
 
-## ACADS to complete this ILW
+- [ ] PCK assessment for SAS2000 (DL: july 26) #urgent
+    - pass certificates
+    - take career PCK test/assessment on website
 
-- [ ] PCK assessment for SAS2000 - dl on july 26
 EOF
 }
 
