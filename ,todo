@@ -9,6 +9,7 @@ set -e
 
 date_today=$(date +%Y-%m-%d)
 todo_file="$VAULT/Personal/todos/"$date_today.md
+todo_template="$VAULT/Personal/todo-template.md"
 
 # check if $VAULT path exists
 cd "$VAULT" || {
@@ -22,36 +23,7 @@ cd "$VAULT" || {
 # fi
 
 new_todo() {
-    touch "$todo_file"
-    cat >"$todo_file" <<EOF
-# DAILY QUEST for $date_today:
-
-## static
-
-- [ ] Workout [if none, do trifecta (100 pushup, 100 situps, 100 squats)]
-- [ ] system design and/or leetcode grind
-- [ ] data-engineering (datacamp, zoomcamp, side projects)
-    - zoomcamp
-    - data-engineering-handbook
-    - datacamp
-    - leap bigquery
-    - stdbadv
-
-## dynamic
-
-- [ ] **ITNET01** case study (DL: july 14) #urgent
-- [ ] **ITISDEV** app - need updates #urgent
-- [ ] **ITDBADM** python API - MP 1 (DL: july 25)
-- [ ] **SEC-ADM** MP2 (DL: august 1)
-
-- [ ] spellbook-todos mini project
-- [ ] learn dbt-core, airflow
-
-- [ ] PCK assessment for SAS2000 (DL: july 26) #urgent
-    - pass certificates
-    - take career PCK test/assessment on website
-
-EOF
+    sed "s/\$date_today/$date_today/g" "$todo_template" >"$todo_file"
 }
 
 if [ ! -f "$todo_file" ]; then
