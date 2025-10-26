@@ -54,8 +54,8 @@ dirs=(
   "$consumet"
 )
 
-mkdir -p "$HOME/backups"
-backups="$HOME/backups"
+RAW_LOCAL_BACKUP_PATH="/mnt/Backups/core/raw"
+# sudo mkdir -p "$RAW_LOCAL_BACKUP_PATH" # must come from external hard drive storage
 
 assert_rsync() {
   local dir=$1
@@ -72,7 +72,7 @@ dry_run() {
     echo "Backing up $dir"
     bn=$(basename "$dir")
     echo "Current bn: $bn"
-    bk_dir="$backups/$bn" # example: ~/backups/traefik
+    bk_dir="$RAW_LOCAL_BACKUP_PATH/$bn" # example: ~/backups/traefik
     echo "Creating if not exists: $bk_dir"
 
     case "$dir" in
@@ -143,7 +143,7 @@ local_backup() {
   # TODO: refactor to use basename and not dir, so all inside services are backed up automatically just by adding new service
   for dir in "${dirs[@]}"; do
     bn=$(basename "$dir")
-    bk_dir="$backups/$bn" # example: ~/backups/traefik
+    bk_dir="$RAW_LOCAL_BACKUP_PATH/$bn" # example: ~/backups/traefik
     mkdir -p "$bk_dir"
     case "$dir" in
     "$traefik" | "$uptime_kuma" | "$glance" | "$consumet")
@@ -228,8 +228,10 @@ local_backup() {
       # immich - backup specific dirs only
       echo "Backing up immich [$dir]..."
       {
-        timestamp=$(date +%s%3n)
-        sudo docker exec -t immich_postgres pg_dumpall --clean --if-exists --username=postgres | gzip | sudo tee "$dir"/library/backups/immich-db-backup-"$timestamp".sql.gz >/dev/null
+        # NOTE: [UPDATE 20251026-0533PM]: immich has auto backups for postgres db (only) now
+        # timestamp=$(date +%s%3n)
+        # sudo docker exec -t immich_postgres pg_dumpall --clean --if-exists --username=postgres | gzip | sudo tee "$dir"/library/backups/immich-db-backup-"$timestamp".sql.gz >/dev/null
+
         # docker-compose, env files, etc.
         find "$dir" -maxdepth 1 -type f -print0 | xargs -0 -I {} rsync -azvh --delete --progress {} "$bk_dir"
         # libs
@@ -269,7 +271,7 @@ remote_backup() {
     exit 1
   fi
   # backup whole $HOME/backups
-  restic backup "$backups" || {
+  restic backup "$RAW_LOCAL_BACKUP_PATH" || {
     echo "Restic failed"
     return 1
   }
