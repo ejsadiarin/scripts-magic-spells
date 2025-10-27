@@ -1,0 +1,11 @@
+#!/bin/bash
+
+sudo mkdir -p /mnt/ColdStorage
+sudo mkdir -p /mnt/Storage1
+sudo mkdir -p /mnt/Backups
+sudo mkdir -p /mnt/Storage2
+
+sudo mount -L "ColdStorage" -o rw,uid=$(id -u),gid=$(id -g) /mnt/ColdStorage
+sudo mount -L "Storage1" -o rw,uid=$(id -u),gid=$(id -g) /mnt/Storage1
+sudo mount -L "Backups" -o rw,uid=$(id -u),gid=$(id -g) /mnt/Backups
+sudo mount -L "Storage2" -o rw,uid=$(id -u),gid=$(id -g) /mnt/Storage2

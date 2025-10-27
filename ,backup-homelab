@@ -54,7 +54,8 @@ dirs=(
   "$consumet"
 )
 
-RAW_LOCAL_BACKUP_PATH="/mnt/Backups/core/raw"
+# RAW_LOCAL_BACKUP_PATH="/mnt/Backups/core/raw"
+RAW_LOCAL_BACKUP_PATH="$HOME/backups"
 # sudo mkdir -p "$RAW_LOCAL_BACKUP_PATH" # must come from external hard drive storage
 
 assert_rsync() {

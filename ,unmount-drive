@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo umount /mnt/sda /mnt/sdb /mnt/sdc /mnt/sdd
