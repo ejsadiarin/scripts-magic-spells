@@ -118,7 +118,7 @@ Checks if a file exists.
 Example: [ -e file.txt ]
 
 `-n`:
-Checks if a string is not empty.
+Checks if a string is not empty (it exists).
 Example: [ -n "$variable" ]
 
 `-z`:
