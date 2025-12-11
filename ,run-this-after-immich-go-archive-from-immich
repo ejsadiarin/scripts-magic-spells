@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Usage: ./,run-this-after-immich-go-archive-from-immich <folder>
+#
+# Problem: immich-go archive from-immich doesn't have file extensions
+# - this means that immich-go upload command will not recognize the backed up assets properly.
+# - for disaster recovery purposes
+#
+
+path=$1
+find "$path" -type f ! -iname '*.json' | while read -r f; do
+    filetype=$(file -b --mime-type "$f")
+
+    # skip json files
+    if [[ "$f" == *.json || "$f" == *.JSON ]]; then
+        continue
+    fi
+
+    # skip if has file extension already
+    filename=$(basename "$f")
+    if [[ "$filename" == *.* ]]; then
+        echo "$f skipped: has file ext ($filename)"
+        continue
+    fi
+
+    case $filetype in
+    image/jpeg)
+        mv "$f" "$f.jpg"
+        ;;
+    image/png)
+        mv "$f" "$f.png"
+        ;;
+    image/gif)
+        mv "$f" "$f.gif"
+        ;;
+    image/heic)
+        mv "$f" "$f.heic"
+        ;;
+    video/mp4)
+        mv "$f" "$f.mp4"
+        ;;
+    video/quicktime)
+        mv "$f" "$f.mov"
+        ;;
+    *)
+        echo "$f: Invalid filetype"
+        continue
+        ;;
+    esac
+done
+
+echo "[INFO] Done renaming files."
