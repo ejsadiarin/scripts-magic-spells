@@ -16,10 +16,20 @@ find "$path" -type f ! -iname '*.json' | while read -r f; do
         continue
     fi
 
-    # skip if has file extension already
     filename=$(basename "$f")
+
+    # for those files with last character as "." in their filenames
+    if [[ "$filename" == *"." ]]; then
+        # just remove the trailing "." last character
+        newname="${f%?}"
+        mv "$f" "$newname"
+        f="$newname"
+        filename=$(basename "$f")
+    fi
+
+    # skip if has file extension already
     if [[ "$filename" == *.* ]]; then
-        echo "$f skipped: has file ext ($filename)"
+        # echo "$f skipped: has file ext ($filename)"
         continue
     fi
 
@@ -30,6 +40,12 @@ find "$path" -type f ! -iname '*.json' | while read -r f; do
     image/png)
         mv "$f" "$f.png"
         ;;
+    # image/webp)
+    #     # maybe parse the JSON metadata with jq -r '.fileName'
+    #     # then extract file extension with cut -d. -f 2
+    #     extracted_ft=$(jq -r '.fileName' "$f" | cut -d. -f 2)
+    #     mv "$f" "$f.$extracted_ft"
+    #     ;;
     image/gif)
         mv "$f" "$f.gif"
         ;;
@@ -42,8 +58,20 @@ find "$path" -type f ! -iname '*.json' | while read -r f; do
     video/quicktime)
         mv "$f" "$f.mov"
         ;;
+    # application/octet-stream)
+    #     # maybe parse the JSON metadata with jq -r '.fileName'
+    #     # then extract file extension with cut -d. -f 2
+    #     extracted_ft=$(jq -r '.fileName' "$f" | cut -d. -f 2)
+    #     mv "$f" "$f.$extracted_ft"
+    #     ;;
     *)
-        echo "$f: Invalid filetype"
+        {
+            echo "$f: Invalid filetype... will extract via its JSON file."
+            # maybe parse the JSON metadata with jq -r '.fileName'
+            # then extract file extension with cut -d. -f 2
+            extracted_ft=$(jq -r '.fileName' "$f.JSON" | cut -d. -f 2)
+            mv "$f" "$f.$extracted_ft"
+        } || echo "Failed to extract via its JSON file."
         continue
         ;;
     esac
