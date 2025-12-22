@@ -30,7 +30,7 @@ TARGETS=(
     "$TRAEFIK"
     "$AUTHENTIK"
     # "$PORTAINER"
-    # "$GITEA"
+    "$GITEA"
     "$NTFY"
     "$GLANCE"
     "$BESZEL"
@@ -175,4 +175,3 @@ else
         exit 1
     fi
 fi
-
