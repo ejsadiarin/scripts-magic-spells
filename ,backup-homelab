@@ -28,17 +28,17 @@ VAULT="$HOME/vault"
 # Comment/Uncomment services to enable/disable backup
 TARGETS=(
     "$TRAEFIK"
-    "$AUTHENTIK"
+    # "$AUTHENTIK"
     # "$PORTAINER"
     "$GITEA"
     "$NTFY"
     "$GLANCE"
-    "$BESZEL"
-    "$UPTIME_KUMA"
+    # "$BESZEL"
+    # "$UPTIME_KUMA"
     "$IMMICH"
     "$RESTIC_CONFIG"
     "$VAULT"
-    "$CONSUMET"
+    # "$CONSUMET"
 )
 
 # --- Functions ---
