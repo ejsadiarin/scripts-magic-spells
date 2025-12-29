@@ -21,6 +21,7 @@ UPTIME_KUMA="$SERVICES_DIR/uptime_kuma"
 GLANCE="$SERVICES_DIR/glance"
 BESZEL="$SERVICES_DIR/beszel"
 CONSUMET="$SERVICES_DIR/consumet"
+DLSU="$HOME/dlsu"
 RESTIC_CONFIG="$SERVICES_DIR/restic"
 VAULT="$HOME/vault"
 
@@ -39,6 +40,7 @@ TARGETS=(
     "$RESTIC_CONFIG"
     "$VAULT"
     # "$CONSUMET"
+    "$DLSU"
 )
 
 # --- Functions ---
