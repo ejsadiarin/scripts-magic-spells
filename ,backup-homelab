@@ -10,7 +10,7 @@ set -e
 NTFY_ENDPOINT="https://ntfy.local.ejsadiarin.com/backups"
 SERVICES_DIR="$HOME/services"
 
-# Service Paths
+# services
 TRAEFIK="$SERVICES_DIR/traefik"
 AUTHENTIK="$SERVICES_DIR/authentik"
 IMMICH="$SERVICES_DIR/immich"
@@ -25,8 +25,6 @@ DLSU="$HOME/dlsu"
 RESTIC_CONFIG="$SERVICES_DIR/restic"
 VAULT="$HOME/vault"
 
-# Active Backup Targets
-# Comment/Uncomment services to enable/disable backup
 TARGETS=(
     "$TRAEFIK"
     # "$AUTHENTIK"
@@ -56,22 +54,20 @@ should_backup() {
     return 1
 }
 
-# Notify via Ntfy
+# notify via Ntfy
 notify() {
     local title="$1"
     local message="$2"
     curl -X POST -H "Title: $title" -d "$message" "$NTFY_ENDPOINT" >/dev/null 2>&1 || true
 }
 
-# Prepare services (Dumps, etc.)
 prepare_backups() {
     echo "--- Preparing Backups ---"
 
-    # Authentik: Dump Postgres
+    # Authentik - dump postgres
     if should_backup "$AUTHENTIK"; then
         echo "Preparing Authentik..."
         mkdir -p "$AUTHENTIK/backups"
-        # Overwrite 'postgres-backup.sql' to avoid local accumulation (Restic handles history)
         if docker exec -i authentik-postgres /usr/local/bin/pg_dump --username authentik-pg-admin authentik-pg-db >"$AUTHENTIK/backups/postgres-backup.sql"; then
             echo "[SUCCESS] Authentik DB dumped."
         else
@@ -80,23 +76,20 @@ prepare_backups() {
         fi
     fi
 
-    # Gitea: Dump (if enabled)
+    # Gitea - dump inside container, cleanup, then prune to keep last 3 only
     if should_backup "$GITEA"; then
         echo "Preparing Gitea..."
         mkdir -p "$GITEA/backups"
-        # Find gitea container
+
         GITEA_CONTAINER=$(docker ps -qf 'name=^gitea-server$')
+
         if [[ -n "$GITEA_CONTAINER" ]]; then
-            # Run dump inside container
             docker exec -u git -w /tmp "$GITEA_CONTAINER" bash -c '/usr/local/bin/gitea dump -c /data/gitea/conf/app.ini'
-            # Get filename
+
             LATEST_ZIP=$(docker exec -u git "$GITEA_CONTAINER" ls /tmp -Art | tail -n 1 | tr -d '\r')
             if [[ -n "$LATEST_ZIP" ]]; then
-                # Copy out
                 docker cp "$GITEA_CONTAINER":/tmp/"$LATEST_ZIP" "$GITEA/backups/"
-                # Cleanup inside container
                 docker exec -u git "$GITEA_CONTAINER" rm /tmp/"$LATEST_ZIP"
-                # Prune old local dumps (keep last 3)
                 (cd "$GITEA/backups" && ls -t | tail -n +4 | xargs -I {} rm -- {}) 2>/dev/null || true
                 echo "[SUCCESS] Gitea dumped: $LATEST_ZIP"
             else
@@ -107,10 +100,11 @@ prepare_backups() {
         fi
     fi
 
-    # Immich: (Auto-backups handled by Immich/Postgres config, we just backup the dirs)
+    # NOTE: for Immich - there auto-backups handled by Immich/postgres config, so we just backup the dirs
 }
 
-# Perform Restic Backup
+# restic backup
+# - dry-run is from restic (builtin)
 perform_backup() {
     local DRY_RUN_FLAG=""
     if [[ "$1" == "--dry-run" ]]; then
@@ -120,7 +114,7 @@ perform_backup() {
         echo "--- Starting Restic Backup ---"
     fi
 
-    # Load Restic Env
+    # NOTE: restic-env is needed for the actual s3 endpoint, if "root" then make sure that restic-env exists there.
     RESTIC_ENV="$RESTIC_CONFIG/restic-env"
     if [[ -f "$RESTIC_ENV" ]]; then
         source "$RESTIC_ENV"
@@ -129,17 +123,16 @@ perform_backup() {
         exit 1
     fi
 
-    # Build Excludes
+    # build excludes
     EXCLUDES=()
 
-    # Gitea: exclude data and raw db (rely on dump)
+    # Gitea - exclude data and raw db (rely on dump)
     EXCLUDES+=("--exclude" "$GITEA/data")
     EXCLUDES+=("--exclude" "$GITEA/gitea-db")
 
-    # Immich: exclude raw postgres (rely on auto-backups/dumps)
+    # Immich - exclude raw postgres (rely on auto-backups/dumps)
     EXCLUDES+=("--exclude" "$IMMICH/postgres")
 
-    # Run Restic
     # sudo -E preserves the sourced environment variables (RESTIC_PASSWORD, etc.)
     if sudo -E restic backup $DRY_RUN_FLAG "${TARGETS[@]}" "${EXCLUDES[@]}"; then
         echo "[SUCCESS] Restic backup successful."
@@ -154,6 +147,7 @@ perform_backup() {
 }
 
 # --- Main ---
+# NOTE: --dry-run and main run
 
 if [[ "$1" == "--dry-run" ]]; then
     echo "[DRY-RUN] Mode"
@@ -161,7 +155,6 @@ if [[ "$1" == "--dry-run" ]]; then
     notify "🟡 [DRY-RUN] Backup Complete" "Restic dry-run finished."
 
 else
-    # Real run
     if prepare_backups; then
         if perform_backup; then
             echo "Successfully finished backing up!"
