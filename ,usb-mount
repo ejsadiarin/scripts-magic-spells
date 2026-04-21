@@ -5,27 +5,27 @@
 
 set -xeuo
 
-mountpoint="/mnt/$(whoami)/ejsmain"
-# mountpoint="/run/media/$(whoami)/ejsmain" # alternative mountpoint (can see in thunar)
+mountpoint="/mnt/usb"
+# mountpoint="/run/media/usb" # alternative mountpoint (can see in thunar/dolphin)
 usbpart="/dev/sda1"
 
 # ensure that the mountpoint exists
 if [ ! -d "$mountpoint" ]; then
-  # create mountpoint
-  echo "[ INFO ] No ejsmain detected.... creating mountpoint at $mountpoint"
-  sudo mkdir -p "$mountpoint"
+    # create mountpoint
+    echo "[ INFO ] No usb detected.... creating mountpoint at $mountpoint"
+    sudo mkdir -p "$mountpoint"
 fi
 
 # open with cryptsetup
-sudo cryptsetup open "$usbpart" ejsmain || {
-  echo "[ ERROR ] Unable to open device."
-  exit 1
+sudo cryptsetup open "$usbpart" usb || {
+    echo "[ ERROR ] Unable to open device."
+    exit 1
 }
 
 # mount
-sudo mount /dev/mapper/ejsmain "$mountpoint" || {
-  echo "[ ERROR ] Unable to mount device."
-  exit 1
+sudo mount /dev/mapper/usb "$mountpoint" || {
+    echo "[ ERROR ] Unable to mount device."
+    exit 1
 }
 
 echo "[ SUCCESS ] Device mounted at $mountpoint"
