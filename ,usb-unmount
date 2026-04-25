@@ -5,32 +5,32 @@
 
 set -e
 
-mountpoint="/mnt/$(whoami)/ejsmain"
-# mountpoint="/run/media/$(whoami)/ejsmain" # alternative mountpoint (can see in thunar)
-usbdisk="/dev/sdb"
+mountpoint="/mnt/usb"
+# mountpoint="/run/media/usb" # alternative mountpoint (can see in thunar)
+usbdisk="/dev/sda"
 
 # ensure that the mountpoint exists
 if [ -d "$mountpoint" ]; then
-	# unmount
-	sudo umount "$mountpoint" || {
-		echo "[ ERROR ] Unable to unmount the device."
-		exit 1
-	}
+    # unmount
+    sudo umount "$mountpoint" || {
+        echo "[ ERROR ] Unable to unmount the device."
+        exit 1
+    }
 
-	echo "[ INFO ] Device unmounted."
-	notify-send "Device unmounted." "$mountpoint has been unmounted."
+    echo "[ INFO ] Device unmounted."
+    notify-send "Device unmounted." "$mountpoint has been unmounted."
 
-	# close with cryptsetup (encrypt)
-	sudo cryptsetup close ejsmain || {
-		echo "[ ERROR ] Unable to close the device."
-		exit 1
-	}
+    # close with cryptsetup (encrypt)
+    sudo cryptsetup close usb || {
+        echo "[ ERROR ] Unable to close the device."
+        exit 1
+    }
 
-	sudo eject "$usbdisk" || {
-		echo "[ ERROR ] Unable to eject the device."
-		exit 1
-	}
+    sudo eject "$usbdisk" || {
+        echo "[ ERROR ] Unable to eject the device."
+        exit 1
+    }
 
-	echo "[ SUCCESS ] 🔒 Device is now ENCRYPTED and LOCKED. "
-	notify-send " 🔒 Device is now ENCRYPTED and LOCKED." "You can now safely remove your USB Device."
+    echo "[ SUCCESS ] 🔒 Device is now ENCRYPTED and LOCKED. "
+    notify-send " 🔒 Device is now ENCRYPTED and LOCKED." "You can now safely remove your USB Device."
 fi

@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+# Backup local ~ to USB via rsync (incremental with --delete)
+# Directories: Documents, Downloads, AndroidStudioProjects, personal, work, Videos, Pictures, Music
+
+set -e
+
+# --- Configuration ---
+NTFY_ENDPOINT="https://ntfy.local.ejsadiarin.com/backups"
+
+# Directories to backup
+DIRS=(
+    "$HOME/Documents"
+    "$HOME/Downloads"
+    "$HOME/AndroidStudioProjects"
+    "$HOME/personal"
+    "$HOME/work"
+    "$HOME/Videos"
+    "$HOME/Pictures"
+    "$HOME/Music"
+)
+
+# Exclude patterns for software engineering projects
+EXCLUDES=(
+    "node_modules"
+    ".cache"
+    ".gradle"
+    "build"
+    "dist"
+    "__pycache__"
+    ".pytest_cache"
+    "vendor"
+    ".git"
+    "*.log"
+    "*.tmp"
+    ".next"
+    ".venv"
+)
+
+# --- Functions ---
+
+# Detect USB mount point
+detect_usb() {
+    local candidates=(
+        "/mnt/usb"
+        "/mnt/backup"
+        "/media/$(whoami)/BACKUP"
+        "/run/media/$(whoami)/BACKUP"
+    )
+
+    for path in "${candidates[@]}"; do
+        if [[ -d "$path" ]] && mountpoint -q "$path" 2>/dev/null || [[ -w "$path" ]]; then
+            echo "$path"
+            return 0
+        fi
+    done
+
+    echo "/mnt/usb"
+    return 1
+}
+
+# notify via Ntfy
+notify() {
+    local title="$1"
+    local message="$2"
+    curl -X POST -H "Title: $title" -d "$message" "$NTFY_ENDPOINT" >/dev/null 2>&1 || true
+}
+
+# Build rsync exclude args
+build_excludes() {
+    local args=()
+    for pattern in "${EXCLUDES[@]}"; do
+        args+=("--exclude" "$pattern")
+    done
+    echo "${args[@]}"
+}
+
+# Perform rsync backup
+perform_backup() {
+    local USB_PATH="$1"
+    local DRY_RUN_FLAG=""
+    local EXCLUDE_ARGS
+
+    if [[ "$2" == "--dry-run" ]]; then
+        DRY_RUN_FLAG="--dry-run"
+        echo "--- Starting USB Backup (DRY RUN) ---"
+    else
+        echo "--- Starting USB Backup ---"
+    fi
+
+    # Ensure namespace dir exists
+    local NAMESPACE="$(whoami)"
+    local TARGET_PATH="$USB_PATH/$NAMESPACE"
+    sudo mkdir -p "$TARGET_PATH"
+
+    EXCLUDE_ARGS=$(build_excludes)
+
+    local success=true
+    for dir in "${DIRS[@]}"; do
+        local dirname=$(basename "$dir")
+        echo "Syncing $dirname..."
+
+        if [[ -d "$dir" ]]; then
+            if sudo rsync -rtzvh --delete --progress $EXCLUDE_ARGS "$dir" "$TARGET_PATH/"; then
+                echo "[SUCCESS] $dirname synced."
+            else
+                echo "[FAILED] $dirname sync failed."
+                success=false
+            fi
+        else
+            echo "[SKIP] $dirname does not exist, skipping."
+        fi
+    done
+
+    if [[ "$success" == "true" ]]; then
+        echo "[SUCCESS] USB backup completed."
+        return 0
+    else
+        echo "[FAILED] USB backup completed with errors."
+        return 1
+    fi
+}
+
+# --- Main ---
+
+USB_PATH=$(detect_usb)
+
+if [[ "$1" == "--dry-run" ]]; then
+    echo "[DRY-RUN] Mode"
+    perform_backup "$USB_PATH" --dry-run
+    notify "🟡 [DRY-RUN] USB Backup Complete" "Dry-run finished for $(whoami)"
+
+else
+    if perform_backup "$USB_PATH"; then
+        echo "Successfully finished backing up to USB!"
+        notify "🟢 [SUCCESS] USB Backup" "Backup to USB completed"
+    else
+        echo "Failed USB backup phase."
+        notify "🔴 [FAILED] USB Backup" "Backup to USB failed."
+        exit 1
+    fi
+fi
