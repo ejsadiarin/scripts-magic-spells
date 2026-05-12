@@ -18,6 +18,8 @@ DIRS=(
     "$HOME/Videos"
     "$HOME/Pictures"
     "$HOME/Music"
+    "$HOME/vault"
+    "$HOME/.ssh"
 )
 
 # Exclude patterns for software engineering projects
@@ -30,7 +32,6 @@ EXCLUDES=(
     "__pycache__"
     ".pytest_cache"
     "vendor"
-    ".git"
     "*.log"
     "*.tmp"
     ".next"

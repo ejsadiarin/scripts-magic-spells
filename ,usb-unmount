@@ -7,7 +7,7 @@ set -e
 
 mountpoint="/mnt/usb"
 # mountpoint="/run/media/usb" # alternative mountpoint (can see in thunar)
-usbdisk="/dev/sda"
+usbdisk="${1:-/dev/sda}"
 
 # ensure that the mountpoint exists
 if [ -d "$mountpoint" ]; then

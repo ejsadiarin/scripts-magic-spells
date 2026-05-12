@@ -7,7 +7,7 @@ set -xeuo
 
 mountpoint="/mnt/usb"
 # mountpoint="/run/media/usb" # alternative mountpoint (can see in thunar/dolphin)
-usbpart="/dev/sda1"
+usbpart="${1:-/dev/sda1}"
 
 # ensure that the mountpoint exists
 if [ ! -d "$mountpoint" ]; then
